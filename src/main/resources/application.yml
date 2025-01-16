@@ -1,0 +1,9 @@
+br.com.fiap.soat7:
+  redis-mid-url: ${REDIS_MID_URL}
+  upload:
+    dir: ${SHARED_DISK}/%s/%s/%s/
+server:
+  port: 8080
+spring:
+  main:
+    web-application-type: none
