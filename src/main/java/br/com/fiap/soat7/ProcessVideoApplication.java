@@ -19,12 +19,5 @@ public class ProcessVideoApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		processVideoService.processQueue();
-//		String videoPath = "/Users/lst/Documents/Hackaton-fiap-2025/volume-compartilhado/1/1/2/Marvel_DOTNET_CSHARP.mp4";
-//		String imagePath = "/Users/lst/Documents/Hackaton-fiap-2025/volume-compartilhado/1/1/2/images";
-//		String imageZipPath = "/Users/lst/Documents/Hackaton-fiap-2025/volume-compartilhado/1/1/2/images.zip";
-//
-//		diskUtils.createFolder(imagePath);
-//		videoProcessing.extractImageFromVideo(videoPath, imagePath);
-//		diskUtils.zipFolder(imagePath, imageZipPath);
 	}
 }
