@@ -4,7 +4,6 @@ import br.com.fiap.soat7.domain.dto.InfoVideo;
 import br.com.fiap.soat7.domain.enums.Stage;
 import br.com.fiap.soat7.domain.enums.StatusRequest;
 import br.com.fiap.soat7.infrastructure.config.DiskUtils;
-import br.com.fiap.soat7.infrastructure.config.VideoProcessProperties;
 import br.com.fiap.soat7.infrastructure.config.VideoProcessing;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
