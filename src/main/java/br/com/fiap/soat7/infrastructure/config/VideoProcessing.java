@@ -12,7 +12,7 @@ import java.io.File;
 @Component
 public class VideoProcessing {
 
-	public String extractImageFromVideo(String videoFilePath, String imageFilePath) throws Exception {
+	public void extractImageFromVideo(String videoFilePath, String imageFilePath) throws Exception {
 		FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(videoFilePath);
 		grabber.start();
 
@@ -46,6 +46,5 @@ public class VideoProcessing {
 		}
 
 		grabber.stop();
-		return imageFilePath;
 	}
 }

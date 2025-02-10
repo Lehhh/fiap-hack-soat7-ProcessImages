@@ -1,0 +1,7 @@
+br:
+  com:
+    fiap:
+      soat7:
+        redis-mid-url: ${REDIS_MID_URL}
+        upload:
+          dir: ${SHARED_DISK:/temp}/%s/%s/%s/
