@@ -2,7 +2,7 @@ package br.com.fiap.soat7.application.service;
 
 import br.com.fiap.soat7.domain.dto.InfoVideo;
 import br.com.fiap.soat7.domain.enums.StatusRequest;
-import br.com.fiap.soat7.infrastructure.config.VideoProcessProperties;
+import br.com.fiap.soat7.infrastructure.config.props.VideoProcessProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
