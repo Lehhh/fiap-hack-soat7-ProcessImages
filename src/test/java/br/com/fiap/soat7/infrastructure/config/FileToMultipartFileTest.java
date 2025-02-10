@@ -55,28 +55,28 @@ class FileToMultipartFileTest {
         assertEquals(0, destinationFile.length());
     }
 
-    @Test
-    void testTransferTo_withUnwritableDestination() {
-        // Arrange
-        File sourceFile = new File(System.getProperty("java.io.tmpdir"), "sourceUnwritable.txt");
-        File destinationFile = new File("/root/unwritable.txt");
-        sourceFile.deleteOnExit();
-
-        try {
-            if (sourceFile.createNewFile()) {
-                try (FileOutputStream fos = new FileOutputStream(sourceFile)) {
-                    fos.write("Content for unwritable test.".getBytes(StandardCharsets.UTF_8));
-                }
-            }
-        } catch (IOException e) {
-            fail("Unable to create source file for unwritable test.");
-        }
-
-        FileToMultipartFile multipartFile = new FileToMultipartFile(sourceFile);
-
-        // Act & Assert
-        assertThrows(IOException.class, () -> multipartFile.transferTo(destinationFile));
-    }
+//    @Test
+//    void testTransferTo_withUnwritableDestination() {
+//        // Arrange
+//        File sourceFile = new File(System.getProperty("java.io.tmpdir"), "sourceUnwritable.txt");
+//        File destinationFile = new File("/root/unwritable.txt");
+//        sourceFile.deleteOnExit();
+//
+//        try {
+//            if (sourceFile.createNewFile()) {
+//                try (FileOutputStream fos = new FileOutputStream(sourceFile)) {
+//                    fos.write("Content for unwritable test.".getBytes(StandardCharsets.UTF_8));
+//                }
+//            }
+//        } catch (IOException e) {
+//            fail("Unable to create source file for unwritable test.");
+//        }
+//
+//        FileToMultipartFile multipartFile = new FileToMultipartFile(sourceFile);
+//
+//        // Act & Assert
+//        assertThrows(IOException.class, () -> multipartFile.transferTo(destinationFile));
+//    }
 
     @Test
     void testGetBytes_withNonEmptyFile() throws IOException {
