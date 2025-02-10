@@ -42,20 +42,18 @@ public class DiskUtils {
 		return multipartFiles;
 	}
 
-	public String createFolder(String finalPath){
+	public void createFolder(String finalPath){
 		File directory = new File(finalPath);
 		if (!directory.exists()) {
 			if (directory.mkdirs()) {
 				log.info("Diretório criado: " + directory.getAbsolutePath());
 			} else {
 				log.error("Falha ao criar o diretório: " + directory.getAbsolutePath());
-				return TextReponse.UPLOAD_DISK_ERROR_FAIL_CREATE_DIRECTORY;
 			}
 		}
-		return "Diretório criado: " + directory.getAbsolutePath();
 	}
 
-	public String zipFolder(String sourceDirPath, String zipFilePath) throws IOException {
+	public void zipFolder(String sourceDirPath, String zipFilePath) throws IOException {
 		Path sourceDir = Paths.get(sourceDirPath);
 		try (ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(zipFilePath))) {
 			Files.walk(sourceDir)
@@ -71,6 +69,5 @@ public class DiskUtils {
 						}
 					});
 		}
-		return zipFilePath;
 	}
 }

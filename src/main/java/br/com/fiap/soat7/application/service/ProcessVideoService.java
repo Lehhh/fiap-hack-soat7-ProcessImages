@@ -33,7 +33,9 @@ public class ProcessVideoService {
 			List<MultipartFile> multipartFiles = diskUtils.listFilesAsMultipartFile(Path.of(String.format(diskFolder, userId,videoId,version)));
 			List<MultipartFile> multipartFilesVideo = multipartFiles.stream().filter(m -> !m.getOriginalFilename().contains("images") && !m.getOriginalFilename().startsWith(".")).toList();
 
+
 			redisService.sendStatus(new InfoVideo(userId, videoId, version, Stage.PROCESS_VIDEO_IN_PROGRESS), StatusRequest.PROCESS_VIDEO_STATUS);
+
 			try {
 				diskUtils.createFolder(String.format(diskFolder, userId,videoId,version) + "images");
 				videoProcessing.extractImageFromVideo(String.format(diskFolder, userId,videoId,version) + multipartFilesVideo.get(0).getOriginalFilename(), String.format(diskFolder, userId,videoId,version) + "images");

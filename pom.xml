@@ -50,6 +50,8 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+
 	</dependencies>
 
 	<build>
@@ -82,7 +84,13 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.12</version>
+				<version>0.8.10</version>
+				<configuration>
+					<excludes>
+						<exclude>**/domain/enums/*</exclude>
+						<exclude>**/domain/dto/*</exclude>
+					</excludes>
+				</configuration>
 				<executions>
 					<execution>
 						<goals>
@@ -95,10 +103,6 @@
 						<goals>
 							<goal>report</goal>
 						</goals>
-						<configuration>
-							<excludes>
-							</excludes>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>

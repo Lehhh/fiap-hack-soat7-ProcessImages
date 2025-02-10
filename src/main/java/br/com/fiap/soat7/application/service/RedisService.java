@@ -25,14 +25,13 @@ public class RedisService {
 	private final VideoProcessProperties props;
 
 
-	public Boolean sendStatus(InfoVideo infoVideo, StatusRequest statusRequest){
+	public void sendStatus(InfoVideo infoVideo, StatusRequest statusRequest){
 		try{
 			ResponseEntity<String> exchange = restTemplate.exchange(props.getRedisMidUrl() + statusRequest.getEndPoint(),
 					HttpMethod.POST,
 					new HttpEntity<>(infoVideo,null),
 					String.class);
 			log.info(exchange.getBody());
-			return true;
 		}
 		catch (Exception e){
 			log.error(e.getMessage());
