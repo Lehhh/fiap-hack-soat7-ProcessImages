@@ -1,19 +1,19 @@
 package br.com.fiap.soat7.application.service;
 
+import br.com.fiap.soat7.domain.dto.InfoVideo;
+import br.com.fiap.soat7.domain.enums.StatusRequest;
 import br.com.fiap.soat7.infrastructure.config.VideoProcessProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -108,5 +108,52 @@ class RedisServiceTest {
                 eq(HttpMethod.GET),
                 eq(EMPTY_HTTP_ENTITY),
                 eq(STRING_LIST_TYPE_REFERENCE));
+    }
+
+    @Test
+    void testSendStatus_ShouldPostStatusSuccessfully() {
+        // Arrange
+        InfoVideo infoVideo = new InfoVideo("1", "2", "1", null); // Dummy InfoVideo object
+        StatusRequest statusRequest = StatusRequest.PROCESS_VIDEO_STATUS;
+        String mockRedisUrl = "http://mock-redis-url";
+        when(props.getRedisMidUrl()).thenReturn(mockRedisUrl);
+        when(restTemplate.exchange(eq(mockRedisUrl + statusRequest.getEndPoint()),
+                eq(HttpMethod.POST),
+                any(HttpEntity.class),
+                eq(String.class)))
+                .thenReturn(ResponseEntity.ok("Success"));
+
+        // Act
+        redisService.sendStatus(infoVideo, statusRequest);
+
+        // Assert
+        verify(restTemplate, times(1)).exchange(eq(mockRedisUrl + statusRequest.getEndPoint()),
+                eq(HttpMethod.POST),
+                any(HttpEntity.class),
+                eq(String.class));
+    }
+
+    @Test
+    void testSendStatus_ShouldThrowException_WhenRestTemplateThrowsException() {
+        // Arrange
+        InfoVideo infoVideo = new InfoVideo("1", "2", "1", null); // Dummy InfoVideo object
+        StatusRequest statusRequest = StatusRequest.PROCESS_VIDEO_STATUS;
+        String mockRedisUrl = "http://mock-redis-url";
+        when(props.getRedisMidUrl()).thenReturn(mockRedisUrl);
+        when(restTemplate.exchange(eq(mockRedisUrl + statusRequest.getEndPoint()),
+                eq(HttpMethod.POST),
+                any(HttpEntity.class),
+                eq(String.class)))
+                .thenThrow(new RuntimeException("RestTemplate error"));
+
+        // Act & Assert
+        RuntimeException exception = org.junit.jupiter.api.Assertions.assertThrows(RuntimeException.class,
+                () -> redisService.sendStatus(infoVideo, statusRequest));
+
+        assertEquals("400 RestTemplate error", exception.getMessage());
+        verify(restTemplate, times(1)).exchange(eq(mockRedisUrl + statusRequest.getEndPoint()),
+                eq(HttpMethod.POST),
+                any(HttpEntity.class),
+                eq(String.class));
     }
 }

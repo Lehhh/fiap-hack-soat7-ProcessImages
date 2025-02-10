@@ -15,6 +15,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 
 class DiskUtilsTest {
 
@@ -76,6 +78,100 @@ class DiskUtilsTest {
                 }
             }
             assertEquals(3, fileCount);
+        }
+    }
+
+    @Test
+    void testZipFolder_WithNestedFolders_CreatesValidZip() throws IOException {
+        // Arrange: Create nested structure
+        Path nestedDir = Files.createDirectory(tempDir.resolve("nested"));
+        Files.writeString(tempDir.resolve("file1.txt"), "Conteudo do arquivo 1");
+        Files.writeString(nestedDir.resolve("file2.txt"), "Conteudo do arquivo 2");
+
+        String zipFilePath = tempDir.resolve("nested.zip").toString();
+
+        // Act
+        diskUtils.zipFolder(tempDir.toString(), zipFilePath);
+
+        // Assert
+        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFilePath))) {
+            ZipEntry entry;
+            int fileCount = 0;
+            while ((entry = zis.getNextEntry()) != null) {
+                if (!entry.isDirectory()) {
+                    fileCount++;
+                }
+            }
+            assertEquals(3, fileCount, "ZIP should contain all files.");
+        }
+    }
+
+    @Test
+    void testZipFolder_ThrowsRuntimeException_OnIOException() {
+        // Arrange
+        String invalidSourceDir = "/invalid/source/dir";
+        String zipFilePath = "/invalid/target.zip";
+
+        // Act & Assert
+        assertThrows(IOException.class, () -> diskUtils.zipFolder(invalidSourceDir, zipFilePath));
+    }
+
+    @Test
+    void testListFilesAsMultipartFile_WithValidFiles_ReturnsMultipartFileList() throws IOException {
+        // Arrange
+        DiskUtils diskUtils = new DiskUtils();
+        Path testFolderPath = Files.createTempDirectory("testFolder");
+        File tempFile1 = Files.createTempFile(testFolderPath, "file1", ".txt").toFile();
+        File tempFile2 = Files.createTempFile(testFolderPath, "file2", ".txt").toFile();
+
+        // Act
+        List<MultipartFile> result = diskUtils.listFilesAsMultipartFile(testFolderPath);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertTrue(result.get(0) instanceof MultipartFile);
+        assertTrue(result.get(1) instanceof MultipartFile);
+
+        // Cleanup
+        tempFile1.delete();
+        tempFile2.delete();
+        Files.delete(testFolderPath);
+    }
+
+    @Test
+    void testListFilesAsMultipartFile_WithEmptyDirectory_ReturnsEmptyList() throws IOException {
+        // Arrange
+        DiskUtils diskUtils = new DiskUtils();
+        Path emptyFolderPath = Files.createTempDirectory("emptyFolder");
+
+        // Act
+        List<MultipartFile> result = diskUtils.listFilesAsMultipartFile(emptyFolderPath);
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+
+        // Cleanup
+        Files.delete(emptyFolderPath);
+    }
+
+    @Test
+    void testListFilesAsMultipartFile_WithIOException_ReturnsEmptyList() {
+        // Arrange
+        DiskUtils diskUtils = new DiskUtils(); // Class under test
+
+        // Mock the static Files.list() method to throw an IOException
+        Path invalidPath = mock(Path.class);
+        try (var mockedFiles = mockStatic(Files.class)) {
+            mockedFiles.when(() -> Files.list(invalidPath)).thenThrow(new IOException("Cannot access path"));
+
+            // Act
+            List<MultipartFile> result = diskUtils.listFilesAsMultipartFile(invalidPath);
+
+            // Assert
+            assertNotNull(result);
+            assertTrue(result.isEmpty());
         }
     }
 }
