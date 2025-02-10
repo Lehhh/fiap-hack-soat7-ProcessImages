@@ -1,4 +1,4 @@
-package br.com.fiap.soat7.infrastructure.config;
+package br.com.fiap.soat7.infrastructure.config.props;
 
 import lombok.Getter;
 import lombok.Setter;
