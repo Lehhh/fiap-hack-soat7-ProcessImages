@@ -1,6 +1,3 @@
-spring:
-  main:
-    web-application-type: none
 br.com.fiap.soat7:
   redis-mid-url: ${REDIS_MID_URL}/redis-message/
   upload:
