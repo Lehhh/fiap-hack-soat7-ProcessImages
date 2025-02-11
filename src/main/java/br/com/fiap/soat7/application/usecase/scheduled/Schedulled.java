@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class Schedulled {
     private final ProcessVideoService processVideoService;
 
-    @Scheduled
+    @Scheduled(fixedDelay = 3000)
     public void executeProcessVideo() {
         processVideoService.processQueue();
     }
