@@ -40,13 +40,13 @@ jobs:
           aws ecr create-repository --repository-name ${{ vars.ECR_REPOSITORY_URL }}${{ vars.PROCESS_VIDEO_IMAGE }} --region us-east-1
 
       - name: Build Docker image
-        run: docker build -t ${{ vars.ECR_REPOSITORY_URL }}${{ vars.PROCESS_VIDEO_IMAGE }}:1.0.1 .
+        run: docker build -t ${{ vars.ECR_REPOSITORY_URL }}${{ vars.PROCESS_VIDEO_IMAGE }}:1.0.0 .
 
       - name: Push Docker image to ECR
-        run: docker push ${{ vars.ECR_REPOSITORY_URL }}${{ vars.PROCESS_VIDEO_IMAGE }}:1.0.1
+        run: docker push ${{ vars.ECR_REPOSITORY_URL }}${{ vars.PROCESS_VIDEO_IMAGE }}:1.0.0
 
       - name: Replace image placeholder
-        run: sed -i 's|IMAGE_CORE_PLACEHOLDER|${{ vars.ECR_REPOSITORY_URL }}${{ vars.PROCESS_VIDEO_IMAGE }}:1.0.1|g' .kube/app/app-deployment.yaml
+        run: sed -i 's|IMAGE_CORE_PLACEHOLDER|${{ vars.ECR_REPOSITORY_URL }}${{ vars.PROCESS_VIDEO_IMAGE }}:1.0.0|g' .kube/app/app-deployment.yaml
 
       - name: Apply Kubernetes deployment
         working-directory: .kube/app
